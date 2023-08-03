@@ -4,7 +4,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "g++",
+            "command": "gcc",
             "args": [
                 "${file}",
                 "-o",
@@ -12,7 +12,7 @@
                 "-g",
                 "-Wall",
                 "-fexec-charset=UTF-8",
-                "-std=c++11"
+                "-std=c11"
             ],
             "group": "build",
             "presentation": {
