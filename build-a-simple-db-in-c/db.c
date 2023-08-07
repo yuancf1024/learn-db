@@ -27,7 +27,7 @@ typedef enum {
 
 typedef enum {
     PREPARE_SUCCESS,
-    PREPARED_UNRECOGNIZED_STATEMENT
+    PREPARE_UNRECOGNIZED_STATEMENT
 } PrepareResult;
 
 // 定义准备语句——statement
@@ -87,7 +87,19 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
         statement->type = STATEMENT_SELECT;
         return PREPARE_SUCCESS;
     }
-    return PREPARED_UNRECOGNIZED_STATEMENT;
+    return PREPARE_UNRECOGNIZED_STATEMENT;
+}
+
+// “虚拟机”
+void execute_statement(Statement* statement) {
+    switch (statement->type) {
+        case (STATEMENT_INSERT):
+            printf("This is where we would do an insert.\n");
+            break;
+        case (STATEMENT_SELECT):
+            printf("This is where we would do a select.\n");
+            break;
+    }
 }
 
 // DB入口
@@ -116,7 +128,7 @@ int main(int argc, char* argv[]) {
         switch (prepare_statement(input_buffer, &statement)) {
             case (PREPARE_SUCCESS):
                 break;
-            case (PREPARE_UNCOGNIZED_STATEMENT):
+            case (PREPARE_UNRECOGNIZED_STATEMENT):
                 printf("Unrecognized keyword at start of '%s'.\n",
                     input_buffer->buffer);
                 continue;
