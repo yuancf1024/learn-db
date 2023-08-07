@@ -30,6 +30,15 @@ typedef enum {
     PREPARED_UNRECOGNIZED_COMMAND
 } PrepareResult;
 
+// 定义准备语句——statement
+typedef enum {
+    STATEMENT_INSERT,
+    STATEMENT_SELECT
+} StatementType;
+
+typedef struct {
+    StatementType type;
+} Statement;
 
 // 向用户打印提示符
 void print_prompt() {
