@@ -19,6 +19,18 @@ InputBuffer* new_input_buffer() {
     return input_buffer;
 }
 
+// 定义元命令的枚举
+typedef enum {
+    META_COMMAND_SUCCESS,
+    META_COMMAND_UNRECOGNIZED_COMMAND
+} MetaCommandResult;
+
+typedef enum {
+    PREPARE_SUCCESS,
+    PREPARED_UNRECOGNIZED_COMMAND
+} PrepareResult;
+
+
 // 向用户打印提示符
 void print_prompt() {
     printf("db > ");
