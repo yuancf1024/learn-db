@@ -134,6 +134,20 @@ void execute_statement(Statement* statement) {
     }
 }
 
+// 转换Row到紧凑表示
+void serialize_row(Row* source, void* destination) {
+    memcpy(destination + ID_OFFSET, &(source->id), ID_SIZE);
+    memcpy(destination + USERNAME_OFFSET, &(source->username), USERNAME_SIZE);
+    memcpy(destination + EMAIL_OFFSET, &(source->email), EMAIL_SIZE);
+}
+
+// 从紧凑表示转换到Row
+void deserialize_row(void* source, Row* destination) {
+    memcpy(&(destination->id), source + ID_OFFSET, ID_SIZE);
+    memcpy(&(destination->username), source + USERNAME_OFFSET, USERNAME_SIZE);
+    memcpy(&(destination->email), source + EMAIL_OFFSET, EMAIL_SIZE);
+}
+
 // DB入口
 int main(int argc, char* argv[]) {
     InputBuffer* input_buffer = new_input_buffer();
