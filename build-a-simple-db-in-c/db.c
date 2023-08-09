@@ -3,6 +3,10 @@
 #include <string.h>
 #include <stdbool.h>
 
+// 定义新的Row结构宏参数
+#define COLUMN_USERNAME_SIZE 32
+#define COLUMN_EMAIL_SIZE 255
+
 // 存储状态的一个小包装类
 typedef struct {
     char* buffer;
@@ -36,8 +40,16 @@ typedef enum {
     STATEMENT_SELECT
 } StatementType;
 
+// 定义Row结构体
+typedef struct {
+    uint32_t id;
+    char username[COLUMN_USERNAME_SIZE];
+    char email[COLUMN_EMAIL_SIZE];
+} Row;
+
 typedef struct {
     StatementType type;
+    Row row_to_insert; // only used by insert statement
 } Statement;
 
 // 向用户打印提示符
@@ -81,6 +93,15 @@ MetaCommandResult do_meta_command(InputBuffer* input_buffer) {
 PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement) {
     if (strncmp(input_buffer->buffer, "insert", 6) == 0) {
         statement->type = STATEMENT_INSERT;
+        // 解析参数
+        int args_assigned = sscanf(
+            input_buffer->buffer, "insert %d %s %s", &(statement->row_to_insert.id),
+            statement->row_to_insert.username, statement->row_to_insert.email
+        );
+        if (args_assigned < 3) {
+            return PREPARE_SYNTAX_ERROR;
+        }
+
         return PREPARE_SUCCESS;
     }
     if (strcmp(input_buffer->buffer, "select") == 0) {
