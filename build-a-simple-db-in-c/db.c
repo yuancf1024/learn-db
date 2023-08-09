@@ -159,6 +159,19 @@ void deserialize_row(void* source, Row* destination) {
     memcpy(&(destination->email), source + EMAIL_OFFSET, EMAIL_SIZE);
 }
 
+// 如何计算特定行在内存中的读/写位置的方法
+void* row_slot(Table* table, uint32_t row_num) {
+    uint32_t page_num = row_num / ROWS_PER_PAGE;
+    void* page = table->pages[page_num];
+    if (page == NULL) {
+        // 仅在尝试访问页时分配内存
+        page = table->pages[page_num] = malloc(PAGE_SIZE);
+    }
+    uint32_t row_offset = row_num % ROWS_PER_PAGE;
+    uint32_t byte_offset = row_offset * ROW_SIZE;
+    return page + byte_offset;
+}
+
 // DB入口
 int main(int argc, char* argv[]) {
     InputBuffer* input_buffer = new_input_buffer();
